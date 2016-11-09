@@ -1,6 +1,0 @@
-#ignore virtual environment
-venv
-#ignore all the compiled python files
-*pyc
-#ignore all the complied database files
-*.db
