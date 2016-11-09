@@ -1,0 +1,45 @@
+
+<style type="text/css">
+  body{
+    background-color: #e1e1e2;
+  }
+
+  .box{
+         width: 500px;
+         height: 600px;
+         margin: 10px auto;
+         background-color: #8dc3ba;
+         align: center;
+  }
+
+</style>
+
+<div class="box">
+<p>  <a href="/">Logout</a></p>
+
+{% from "form_headers.html" import render_field %}
+
+      	<table border="1">
+         <thead>
+            <tr>
+               <th>Fistname</th>
+               <th>Lastname</th>
+               <th>Email</th>
+               <th>Username</th>
+            </tr>
+         </thead>
+         
+         <tbody>
+            {% for user in users %}
+               <tr>
+                  <td>{{ user.firstname }}</td>
+                  <td>{{ user.lastname }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.username }}</td>
+               </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+
+      </div>
+
