@@ -10,21 +10,26 @@ import datetime
  
 app = Flask(__name__)
 app.secret_key = 'peter_mwenda_njeru_1234567890'
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db' 
+
+
 bootstrap = Bootstrap(app)
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-'sqlite:///' + os.path.join(basedir, 'data.sqlite')
-
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-
 lm = LoginManager(app)
 lm.login_view = 'login'
 
 @app.route('/')
 def index():
     return render_template('index.html') 
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    form = FlagForm(request.form)
+    if request.method == 'POST':
+        return redirect('/test')  
+    return render_template('test.html')
+
 
 
 
@@ -35,7 +40,7 @@ def homepage():
 
 @app.route('/suggestion') 
 def getsuggestion(): 
-    return render_template('suggestion.html', suggestions = models.Suggestion.query.all() )    
+    return render_template('suggestion.html', suggestions = models.Suggestion.query.all() ) 
    
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -47,10 +52,21 @@ def signup():
 
         models.db.session.add(user)
         models.db.session.commit()
-        flash('Thanks for registering')
         return redirect('/login') 
- 
     return render_template('signup.html', form=form)
+
+def existUsername(username): 
+    if models.User.query.filter_by(username=username).first():
+        return True
+    else:
+        return False 
+
+def existEmail(email): 
+    if models.User.query.filter_by(email=email).first():
+        return True
+    else:
+        return False         
+        
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -83,8 +99,10 @@ def suggestion():
 def comment():
     form = CommentForm(request.form) 
     if request.method == 'POST' and form.validate():
+        comment = models.Comment(str(uuid.uuid4()),str(form.suggestionid.data),str(session['uuid']),form.comment.data,datetime.datetime.now())
+        models.db.session.add(comment)
+        models.db.session.commit()
         flash('Thanks for the comment')
-        print form.comment.data ,'---', form.base_user.data ,'---',str(session['uuid']) 
         return redirect('/suggestion')
 
     return redirect('/suggestion') 
@@ -104,5 +122,7 @@ def flag():
 
 
 if __name__== '__main__':
-	app.run() 
+    models.db.create_all()
+    app.run(debug=True) 
+	
 	

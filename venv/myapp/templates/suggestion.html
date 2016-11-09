@@ -135,20 +135,25 @@
       <div class="sugestion-box">
 
         <div class="nav-top">
-            <div class="suggestion-title"> <p style="color:blue; font-size: 20px;"> {{ suggest.useruuid }} </p> Topic:  {{ suggest.title }} </div>
+            <div class="suggestion-title"> <p style="color:blue; font-size: 20px;"> {{ suggest.user.username }} </p> Topic:  {{ suggest.title }} </div>
             <div class="suggestion"> {{ suggest.suggestion }} </div>
-            <div class="suggestion-status">Status: {{ suggest.status }} </div>
+            <div class="suggestion-status"> <p> Status: {{ suggest.status }} </div>
         </div>
 
         <div class="nav-bootom">
             
               
             <div class="nav-left">
-      
-               <div class="suggestion-comment"> 
+                        {% for comment in suggest.comments %}
+                        <p>
+                          {{ comment.user.username}} :: {{ comment.comment }}
+                        </p>
+
+                        {% endfor %}
+               <div class="suggestion-comment">
                         <form method=post action="/comment">
                           <dl> <textarea rows="6" cols="30" name="comment"> </textarea> </dl>
-                          <dl> <input type="hidden" name="base_user" value="{{ suggest.useruuid }}"> </dl>
+                          <dl> <input type="hidden" name="suggestionid" value="{{ suggest.uuid }}"> </dl>
                         <p align="center"><input type=submit value=Comment>
                         </form> 
                 </div>

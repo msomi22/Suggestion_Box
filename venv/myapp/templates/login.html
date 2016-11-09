@@ -16,11 +16,13 @@
 </style>
 
 <div class="box">
+  
+  <p> {{ message }}</p>
 
-{% from "form_headers.html" import render_field %}
+{% from  "form_headers.html" import render_field %}
 
 
-<form method=post action="/login"> 
+<form  method=post action="/login"> 
   <dl>
     {{ render_field(form.username) }}
     {{ render_field(form.password) }}

@@ -1,12 +1,12 @@
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, ForeignKey, Date, Text , DateTime , SmallInteger
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask
-import os
+from flask_sqlalchemy import SQLAlchemy
 
 from runserver import app
 
-db = SQLAlchemy(app) 
+db = SQLAlchemy(app)  
+
 
 
 """ 
@@ -70,6 +70,9 @@ class Suggestion(db.Model):
 	flagStatus = db.Column(db.String(100), nullable=True)
 	status = db.Column(db.String(100), nullable=True)
 	datePosted = db.Column(db.DateTime(200), nullable=True)
+	user = db.relationship('User', backref=db.backref('suggestions', lazy='dynamic')) 
+
+
 
 	def __repr__(self):
 		return '<Suggestion %r>' % self.uuid
@@ -78,6 +81,10 @@ class Suggestion(db.Model):
 """
 """	
 class FlagCount(db.Model):
+	def __init__(self,suggestionuuid,count):
+		self.suggestionuuid = suggestionuuid
+		self.count = count
+
 	__tablename__ = 'flagcount'
 	id = db.Column(db.Integer, primary_key=True)
 	suggestionuuid = Column(db.Text, ForeignKey('suggestion.uuid'), nullable=False)
@@ -90,21 +97,28 @@ class FlagCount(db.Model):
 """
 """	
 class Comment(db.Model):
+
+	def __init__(self,uuid,suggestionuuid,commenting_user_id,comment,commentDate):
+		self.uuid = uuid
+		self.suggestionuuid = suggestionuuid
+		self.commenting_user_id = commenting_user_id
+		self.comment = comment
+		self.commentDate = commentDate
+		
+
+
 	__tablename__ = 'comment'
 	id = db.Column(db.Integer, primary_key=True)
 	uuid = db.Column(db.Text, unique=True, index=True)
 	suggestionuuid = Column(db.Text, ForeignKey('suggestion.uuid'), nullable=False)
-	useruuid = Column(db.Text, ForeignKey('user.uuid'), nullable=False)
+	commenting_user_id = Column(db.Text, ForeignKey('user.uuid'), nullable=False)
 	comment = db.Column(db.Text, nullable=True)
 	commentDate = db.Column(db.DateTime(200), nullable=True)
+	user = db.relationship('User', backref=db.backref('comments', lazy='dynamic')) 
+	suggestion = db.relationship('Suggestion', backref=db.backref('comments', lazy='dynamic')) 
+
 	
 	def __repr__(self):
-		return '<User %r>' % self.username	
+		return '<User %r>' % self.uuid	
 
-'''
-if __name__== '__main__':
-	app.run()
-	
-	
-'''	
 

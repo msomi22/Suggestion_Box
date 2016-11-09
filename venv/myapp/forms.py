@@ -23,6 +23,7 @@ class SuggestionForm(Form):
 class CommentForm(Form):
 	comment = TextAreaField('Your comment')  
 	base_user = HiddenField('base_user')
+	suggestionid = HiddenField('suggestionid') 
 	 #commenting_user = HiddenField('commenting_user')
 
 class VoteForm(Form):
@@ -31,7 +32,7 @@ class VoteForm(Form):
 	pass 
 
 class FlagForm(Form):
-	#base_user = HiddenField('base_user')
-	#commenting_user = HiddenField('commenting_user')
+	base_user = HiddenField('base_user')
+	commenting_user = HiddenField('commenting_user')
 	pass 
 
