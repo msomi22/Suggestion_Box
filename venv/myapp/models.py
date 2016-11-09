@@ -49,10 +49,9 @@ class User(db.Model):
 """	
 class Suggestion(db.Model):
 
-	def __init__(self,uuid,useruuid,title,email,suggestion,voteStatus,flagStatus,status,datePosted):
+	def __init__(self,uuid,useruuid,title,suggestion,voteStatus,flagStatus,status,datePosted):
 		self.uuid = uuid
 		self.useruuid = useruuid
-		self.lastname = lastname
 		self.title = title
 		self.suggestion = suggestion
 		self.voteStatus = voteStatus

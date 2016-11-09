@@ -1,0 +1,175 @@
+
+<style type="text/css">
+  body{
+    background-color: #e1e1e2;
+  }
+
+  .box{
+         width: 800px;
+         height: auto;
+         margin: 10px auto;
+         background-color: #8dc3ba;
+         align: center;
+  }
+
+  .header{  
+    background-color: #e4e3e3;
+  }
+  .header li{
+    list-style: none;
+    display: inline;
+    }
+   .header ul li{
+    padding-right: 10px;
+    text-transform: capitalize;
+
+    }
+   .header a{
+    text-decoration: none;
+    }
+
+    .header a:hover{
+     background-color: white;
+     font-size: 20px;
+     
+    }
+
+
+    .sugestion-box{
+      background-color: #cacacc;
+      width: 700px;
+      height: auto;
+      margin: 10px;
+      border:solid 2px; 
+      overflow: scroll;
+
+    }
+
+    .nav-top{
+      width: 700px;
+      height: auto;
+    }
+
+    .nav-bootom{
+      width: 700px;
+      height: 100px;
+      background-color: blue; 
+    }
+
+   /** top   **/
+    .suggestion-title{
+      width: 700px;
+      height: auto;
+    }
+    .suggestion{
+      background-color: #c0c0c5;
+      width: 700px;
+      height: auto;
+    }
+    .suggestion-status{
+      width: 100px
+      height: 20px;
+      align:center;
+      text-align: center;
+    }
+    
+
+    /** top  end  **/
+
+     /** bottom   **/
+    
+    .nav-left{
+      width: 400px;
+      height: 100px; 
+      margin-left: 0;
+      background-color: #b4b7b5;
+      position: absolute;
+      overflow: scroll;
+      
+      
+    }
+    .nav-right{
+      width: 300px;
+      height: 100px; 
+      margin-left: 400px;
+      background-color: #ccc2cc;
+      position: absolute;
+      overflow: scroll;
+     
+
+    }
+
+    .suggestion-comment{
+      width: 300px
+      height: auto;
+      align:center;
+      text-align: center;
+    }
+
+    .suggestion-vote{
+      width: 40px
+      height: 20px;
+      align:center;
+      text-align: center;
+    }
+    
+   /** bottom  end **/
+
+</style>
+
+<div class="box">
+<p> Hi {{ session['username'] }} Your can post a suggestion below </p>
+
+<div class="header">
+  <ul>
+    <li><a href="">Suggestions</a></li>
+    <li><a href="/">Logout</a></li>
+  </ul>
+</div>
+
+{% from "form_headers.html" import render_field %}
+
+      <p>Post a suggestion <a href="/suggest">here</a> </p>	
+
+      {% for suggest in suggestions %}
+      <div class="sugestion-box">
+
+        <div class="nav-top">
+            <div class="suggestion-title"> <p style="color:blue; font-size: 20px;"> {{ suggest.useruuid }} </p> Topic:  {{ suggest.title }} </div>
+            <div class="suggestion"> {{ suggest.suggestion }} </div>
+            <div class="suggestion-status">Status: {{ suggest.status }} </div>
+        </div>
+
+        <div class="nav-bootom">
+            
+              
+            <div class="nav-left">
+      
+               <div class="suggestion-comment"> 
+                        <form method=post action="/comment">
+                          <dl> <textarea rows="6" cols="30" name="comment"> </textarea> </dl>
+                          <dl> <input type="hidden" name="base_user" value="{{ suggest.useruuid }}"> </dl>
+                        <p align="center"><input type=submit value=Comment>
+                        </form> 
+                </div>
+                
+            </div>
+
+            <div class="nav-right"> 
+                 <div class="suggestion-vote">
+                     <a href="">Vote</a> <br>
+                     <a href="">Flag</a> 
+                 </div>
+                
+            </div>
+            
+        </div> 
+            
+      </div>
+      {% endfor %}
+
+
+
+
+</div>
+

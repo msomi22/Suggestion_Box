@@ -3,12 +3,14 @@ from flask import Flask
 from flask import render_template, request, flash ,redirect, url_for, session
 from forms import SignupForm, LoginForm, SuggestionForm, CommentForm, VoteForm, FlagForm 
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask_bootstrap import Bootstrap
 import models
 import uuid
 import datetime
  
 app = Flask(__name__)
 app.secret_key = 'peter_mwenda_njeru_1234567890'
+bootstrap = Bootstrap(app)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -29,6 +31,11 @@ def index():
 @app.route('/home') 
 def homepage(): 
     return render_template('home.html', users = models.User.query.all() )
+
+
+@app.route('/suggestion') 
+def getsuggestion(): 
+    return render_template('suggestion.html', suggestions = models.Suggestion.query.all() )    
    
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -41,8 +48,8 @@ def signup():
         models.db.session.add(user)
         models.db.session.commit()
         flash('Thanks for registering')
-        return redirect('/home') 
-
+        return redirect('/login') 
+ 
     return render_template('signup.html', form=form)
 
 
@@ -61,11 +68,27 @@ def login():
 
 @app.route('/suggest', methods=['GET', 'POST'])
 def suggestion():
-	pass
+    form = SuggestionForm(request.form) 
+    if request.method == 'POST' and form.validate():
+        suggestion = models.Suggestion(str(uuid.uuid4()),str(session['uuid']),form.title.data,form.suggestion.data,2,'new','new', datetime.datetime.now())
+        models.db.session.add(suggestion)
+        models.db.session.commit()
+        flash('Thanks for posting')
+        return redirect('/suggestion') 
+        
+    return render_template('suggest.html', form=form)     
+	
 
 @app.route('/comment', methods=['GET', 'POST'])
 def comment():
-	pass
+    form = CommentForm(request.form) 
+    if request.method == 'POST' and form.validate():
+        flash('Thanks for the comment')
+        print form.comment.data ,'---', form.base_user.data ,'---',str(session['uuid']) 
+        return redirect('/suggestion')
+
+    return redirect('/suggestion') 
+	
 
 @app.route('/vote', methods=['GET', 'POST'])
 def vove():

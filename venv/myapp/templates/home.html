@@ -12,10 +12,40 @@
          align: center;
   }
 
+  .header{  
+    background-color: #e4e3e3;
+  }
+  .header li{
+    list-style: none;
+    display: inline;
+    }
+   .header ul li{
+    padding-right: 10px;
+    text-transform: capitalize;
+
+    }
+   .header a{
+    text-decoration: none;
+    }
+
+    .header a:hover{
+     background-color: white;
+     font-size: 20px;
+     
+    }
+
+
 </style>
 
 <div class="box">
-<p>  <a href="/">Logout</a></p>
+<p> Welcome {{ session['username'] }} Your user id is : {{session['uuid']}} </p>
+
+<div class="header">
+  <ul>
+    <li><a href="/suggestion">Suggestions</a></li>
+    <li><a href="/">Logout</a></li>
+  </ul>
+</div>
 
 {% from "form_headers.html" import render_field %}
 

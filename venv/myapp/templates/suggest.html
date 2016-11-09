@@ -1,0 +1,61 @@
+
+<style type="text/css">
+  body{
+    background-color: #e1e1e2;
+  }
+
+  .box{
+         width: 500px;
+         height: 600px;
+         margin: 10px auto;
+         background-color: #8dc3ba;
+         align: center;
+  }
+
+  .header{  
+    background-color: #e4e3e3;
+  }
+  .header li{
+    list-style: none;
+    display: inline;
+    }
+   .header ul li{
+    padding-right: 10px;
+    text-transform: capitalize;
+
+    }
+   .header a{
+    text-decoration: none;
+    }
+
+    .header a:hover{
+     background-color: white;
+     font-size: 20px;
+     
+    }
+
+
+</style>
+
+<div class="box">
+<p> Hi {{ session['username'] }} Your can post a suggestion here </p>
+
+<div class="header">
+  <ul>
+    <li><a href="">Suggestions</a></li>
+    <li><a href="/suggestion">Back</a></li>
+  </ul>
+</div>
+
+{% from "form_headers.html" import render_field %}
+
+
+<form method=post action="/suggest"> 
+  <dl>
+    {{ render_field(form.title) }}
+    {{ render_field(form.suggestion) }}
+  </dl>
+  <p align="center"><input type=submit value=Post>
+</form>
+
+</div>
