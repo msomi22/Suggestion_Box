@@ -1,11 +1,10 @@
-import os
 from flask import Flask
 from flask import render_template, request, flash ,redirect, url_for, session
 from forms import SignupForm, LoginForm, SuggestionForm, CommentForm, VoteForm, FlagForm 
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from flask_bootstrap import Bootstrap
 from validate_email import validate_email
-import models
+import models 
 import uuid
 import datetime
  
