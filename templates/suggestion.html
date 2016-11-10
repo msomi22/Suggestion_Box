@@ -1,0 +1,164 @@
+
+<style type="text/css">
+  body{
+    background-color: #e1e1e2;
+  }
+
+  .box{
+         width: 800px;
+         height: auto;
+         margin: 10px auto;
+         background-color: #8dc3ba;
+         align: center;
+         border:solid 1px; 
+         text-align: center;
+      
+  }
+
+  .header{  
+    height: 20px;
+    background-color: #cacbcc;
+  }
+  .header li{
+    list-style: none;
+    display: inline;
+    }
+   .header ul li{
+    padding-right: 10px;
+    text-transform: capitalize;
+
+    }
+   .header a{
+    text-decoration: none;
+    }
+
+    .header a:hover{
+     background-color: #efe8e8;
+     font-size: 20px;
+     
+    }
+
+
+    .sugestion-box{
+      background-color: #cacacc;
+      width: 800px;
+      height: auto;
+      text-align: left;
+      align:center;
+     
+    }
+
+    .nav-top{
+      width: 700px;
+      height: auto;
+    }
+
+    .nav-bootom{
+      width: 700px;
+      height: 400px;
+    }
+
+   /** top   **/
+    .suggestion-title{
+      width: 700px;
+      height: auto;
+    }
+    .suggestion{
+      background-color: white;
+      width: 700px;
+      height: auto;
+      overflow: scroll;
+    }
+    .suggestion-status{
+      width: 100px
+      height: 20px;
+      align:center;
+      text-align: center;
+    }
+    
+
+    /** top  end  **/
+
+     /** bottom   **/
+    
+    .nav-left{
+      width: 400px;
+      height: 400px; 
+      margin-left: 0;
+      background-color: #b4b7b5;
+      position: absolute;
+      overflow: scroll;
+
+    }
+    .nav-right{
+      width: 300px;
+      height: 400px; 
+      margin-left: 400px;
+      background-color: #ccc2cc;
+      position: absolute;
+    }
+
+    .suggestion-comment{
+      width: 300px
+      height: auto;
+      align:center;
+      text-align: center;
+    }
+
+    .suggestion-vote{
+      width: 40px
+      height: 20px;
+      align:center;
+      text-align: center;
+    }
+    
+   /** bottom  end **/
+
+   .footer{
+      height: 20px;
+      width: 800px;
+      margin-top: 10px;
+      background-color: #e4e3e3;
+      border:solid 1px;
+      text-align: center;
+    }
+    a{
+      text-decoration: none;
+    }
+
+</style>
+
+<div class="box">
+<p> Hi {{ session['username'] }} , welcome back, we missed you. </p>
+
+<div class="header">
+  <ul>
+    <li><a href="/suggest">Post something</a></li>
+     <li><a href="/home">Back</a></li>
+    <li><a href="/">Logout</a></li>
+  </ul>
+</div>
+
+{% from "form_headers.html" import render_field %}
+
+
+      {% for suggest in suggestions %}
+      <div class="sugestion-box">
+
+        <div class="nav-top">
+            <div class="suggestion-title"> <p style="color:blue; font-size: 20px;"> {{ suggest.user.username }} </p> 
+            <a href="{{ url_for('getonesuggestion', suggestid=suggest.uuid) }}"> Topic:  {{ suggest.title }} ... </a></div>
+            
+            
+        </div> 
+            
+      </div>
+      {% endfor %}
+
+
+     <div class="footer">
+         &copy;  Peter and son Software Dev, 2016 
+      </div>
+
+</div>
+
