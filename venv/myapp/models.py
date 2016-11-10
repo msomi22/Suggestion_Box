@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, Text , DateTime , SmallInteger,and_
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, Text , DateTime , SmallInteger
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -72,6 +72,7 @@ class Suggestion(db.Model):
 
 
 
+
 	def __repr__(self):
 		return '<Suggestion %r>' % self.uuid
 
@@ -87,6 +88,7 @@ class FlagCount(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	suggestionuuid = Column(db.Text, ForeignKey('suggestion.uuid'), nullable=False)
 	flaginguseruuid = Column(db.Text, ForeignKey('user.uuid'), nullable=False) 
+	suggestion = db.relationship('Suggestion', backref=db.backref('flagcount', lazy='dynamic'))
 	
 	def __repr__(self):
 		return '<flagCount %r>' % self.suggestionuuid	
@@ -105,6 +107,7 @@ class Vote(db.Model):
 	suggestionuuid = Column(db.Text, ForeignKey('suggestion.uuid'), nullable=False)
 	votinguseruuid = Column(db.Text, ForeignKey('user.uuid'), nullable=False)
 	status = db.Column(db.String(100), nullable=True)
+	suggestion = db.relationship('Suggestion', backref=db.backref('vote', lazy='dynamic'))
 	
 	def __repr__(self):
 		return '<vote %r>' % self.suggestionuuid	

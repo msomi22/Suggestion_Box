@@ -32,7 +32,13 @@ def homepage():
 @app.route('/suggestion') 
 def getsuggestion(): 
     return render_template('suggestion.html', suggestions = models.Suggestion.query.all() ) 
-   
+
+@app.route('/suggestion/<suggestid>') 
+def getonesuggestion(suggestid):
+    suggestion = models.Suggestion.query.filter_by(uuid=suggestid).first()
+    vote = models.Vote.query.filter_by(suggestionuuid=suggestion.uuid).first()
+    return render_template('one_suggestion.html', suggestion=suggestion, vote=vote)
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -106,10 +112,11 @@ def vove():
     if request.method == 'POST' and form.validate():
         if voted(form.suggestionid.data,str(session['uuid'])):
             flash('You cant vote twice')
+            return redirect('/suggestion')
         vote = models.Vote(form.suggestionid.data,str(session['uuid']),'up')
         models.db.session.add(vote)
-        flash('Thanks, suggestion up-voted')
         models.db.session.commit()
+        flash('Thanks, suggestion up-voted')
         return redirect('/suggestion')   
 	return redirect('/suggestion') 
 
@@ -123,11 +130,20 @@ def voted(suggestionuuid,votinguseruuid):
 def flag():
     form = FlagForm(request.form)
     if request.method == 'POST' and form.validate(): 
+        if flagged(form.suggestionid.data,str(session['uuid'])):
+            flash('You cant flag twice')
+            return redirect('/suggestion')
         flag = models.FlagCount(form.suggestionid.data,str(session['uuid'])) 
         models.db.session.add(flag)
         models.db.session.commit()
+        flash('Thanks for your concerns regarding this suggestion, we will act accordingly')
         return redirect('/suggestion')
 	return redirect('/suggestion') 
+
+def flagged(suggestionuuid,flaginguseruuid):
+    if models.FlagCount.query.filter_by(suggestionuuid=suggestionuuid,flaginguseruuid=flaginguseruuid).first():
+        return True
+
 
 
 if __name__== '__main__':

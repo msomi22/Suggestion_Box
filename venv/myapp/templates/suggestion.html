@@ -146,7 +146,8 @@
       <div class="sugestion-box">
 
         <div class="nav-top">
-            <div class="suggestion-title"> <p style="color:blue; font-size: 20px;"> {{ suggest.user.username }} </p> Topic:  {{ suggest.title }} </div>
+            <div class="suggestion-title"> <p style="color:blue; font-size: 20px;"> {{ suggest.user.username }} </p> 
+            <a href="{{ url_for('getonesuggestion', suggestid=suggest.uuid) }}"> Topic:  {{ suggest.title }} ... </a></div>
             <div class="suggestion"> {{ suggest.suggestion }} </div>
             <div class="suggestion-status">
 
@@ -187,7 +188,7 @@
                  <div class="suggestion-vote">
                         <form method=post action="/vote">
                           <dl> <input type="hidden" name="suggestionid" value="{{ suggest.uuid }}"> </dl>
-                        <p align="center"><input type=submit value=Vote>
+                        <p align="center"><input type=submit value=Vote >
                         </form> 
 
                         <form method=post action="/flag">
