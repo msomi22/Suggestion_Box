@@ -1,0 +1,50 @@
+
+
+<style type="text/css">
+	body{
+		background-color: #e1e1e2;
+	}
+
+	.box{
+         width: 500px;
+         height: 200px;
+         margin: 10px auto;
+         background-color: #8dc3ba;
+         align: center;
+         text-align: center; 
+         border:solid 1px;
+	}
+
+  a{ 
+    text-decoration: none;
+  }
+
+</style>
+
+
+
+<div class="box">
+
+<p align="center">
+      <a href="/">Back</a> 
+</p>
+
+<p>
+  {{ message }}
+</p>
+ 
+
+{% from  "form_headers.html" import render_field %}
+
+
+<form  method=post action="/login"> 
+  <dl>
+    {{ render_field(form.username) }}
+    {{ render_field(form.password) }}
+  </dl>
+  <p align="center"><input type=submit value=Login>
+</form>
+
+
+
+</div>
