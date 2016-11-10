@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, Text , DateTime , SmallInteger
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, Text , DateTime , SmallInteger,and_
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -49,12 +49,11 @@ class User(db.Model):
 """	
 class Suggestion(db.Model):
 
-	def __init__(self,uuid,useruuid,title,suggestion,voteStatus,flagStatus,status,datePosted):
+	def __init__(self,uuid,useruuid,title,suggestion,flagStatus,status,datePosted):
 		self.uuid = uuid
 		self.useruuid = useruuid
 		self.title = title
 		self.suggestion = suggestion
-		self.voteStatus = voteStatus
 		self.flagStatus = flagStatus
 		self.status = status
 		self.datePosted = datePosted
@@ -66,7 +65,6 @@ class Suggestion(db.Model):
 	useruuid = Column(db.Text, ForeignKey('user.uuid'), nullable=False)
 	title = db.Column(db.Text, nullable=True)
 	suggestion = db.Column(db.Text, nullable=True)
-	voteStatus = db.Column(db.SmallInteger, nullable=True)
 	flagStatus = db.Column(db.String(100), nullable=True)
 	status = db.Column(db.String(100), nullable=True)
 	datePosted = db.Column(db.DateTime(200), nullable=True)
@@ -81,17 +79,36 @@ class Suggestion(db.Model):
 """
 """	
 class FlagCount(db.Model):
-	def __init__(self,suggestionuuid,count):
+	def __init__(self,suggestionuuid,flaginguseruuid):
 		self.suggestionuuid = suggestionuuid
-		self.count = count
+		self.flaginguseruuid = flaginguseruuid
 
 	__tablename__ = 'flagcount'
 	id = db.Column(db.Integer, primary_key=True)
 	suggestionuuid = Column(db.Text, ForeignKey('suggestion.uuid'), nullable=False)
-	count = db.Column(db.SmallInteger, nullable=True)
+	flaginguseruuid = Column(db.Text, ForeignKey('user.uuid'), nullable=False) 
 	
 	def __repr__(self):
 		return '<flagCount %r>' % self.suggestionuuid	
+
+
+"""
+"""	
+class Vote(db.Model): 
+	def __init__(self,suggestionuuid,votinguseruuid,status):
+		self.suggestionuuid = suggestionuuid
+		self.votinguseruuid = votinguseruuid
+		self.status = status
+
+	__tablename__ = 'vote'
+	id = db.Column(db.Integer, primary_key=True)
+	suggestionuuid = Column(db.Text, ForeignKey('suggestion.uuid'), nullable=False)
+	votinguseruuid = Column(db.Text, ForeignKey('user.uuid'), nullable=False)
+	status = db.Column(db.String(100), nullable=True)
+	
+	def __repr__(self):
+		return '<vote %r>' % self.suggestionuuid	
+
 
 
 """
@@ -122,3 +139,31 @@ class Comment(db.Model):
 		return '<User %r>' % self.uuid	
 
 
+'''
+TODO
+
+
+     important
+     a) display flag count, flag a suggestion
+     b) show suggestions that have been up/down voted and by who
+
+1) Signup
+     a) prevent user with the same username and/or email from signing up
+     b) 
+
+ 2) Vote (!important)
+     a)  prevent user from up/down voting one suggestion twice
+
+ 3) Flag
+     a) prevent user from flagging one suggestion twice      
+
+ 4) General 
+     a) give feedback message to the user  
+     b) 
+
+ 5) Others
+      a) Host on heroku     
+
+
+
+'''

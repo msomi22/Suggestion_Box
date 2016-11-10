@@ -6,10 +6,12 @@
 
   .box{
          width: 500px;
-         height: 600px;
+         height: auto;
          margin: 10px auto;
          background-color: #8dc3ba;
          align: center;
+         border:solid 1px; 
+         text-align: center;
   }
 
   .header{  
@@ -42,7 +44,6 @@
 
 <div class="header">
   <ul>
-    <li><a href="">Suggestions</a></li>
     <li><a href="/suggestion">Back</a></li>
   </ul>
 </div>
@@ -52,8 +53,8 @@
 
 <form method=post action="/suggest"> 
   <dl>
-    {{ render_field(form.title) }}
-    {{ render_field(form.suggestion) }}
+    {{ render_field(form.title,size=60) }}
+    {{ render_field(form.suggestion,rows=20,cols=30) }}
   </dl>
   <p align="center"><input type=submit value=Post>
 </form>

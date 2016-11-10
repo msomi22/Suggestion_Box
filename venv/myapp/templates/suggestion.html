@@ -10,10 +10,14 @@
          margin: 10px auto;
          background-color: #8dc3ba;
          align: center;
+         border:solid 1px; 
+         text-align: center;
+      
   }
 
   .header{  
-    background-color: #e4e3e3;
+    height: 20px;
+    background-color: #cacbcc;
   }
   .header li{
     list-style: none;
@@ -29,7 +33,7 @@
     }
 
     .header a:hover{
-     background-color: white;
+     background-color: #efe8e8;
      font-size: 20px;
      
     }
@@ -37,12 +41,11 @@
 
     .sugestion-box{
       background-color: #cacacc;
-      width: 700px;
+      width: 800px;
       height: auto;
-      margin: 10px;
-      border:solid 2px; 
-      overflow: scroll;
-
+      text-align: left;
+      align:center;
+     
     }
 
     .nav-top{
@@ -52,8 +55,7 @@
 
     .nav-bootom{
       width: 700px;
-      height: 100px;
-      background-color: blue; 
+      height: 400px;
     }
 
    /** top   **/
@@ -62,9 +64,10 @@
       height: auto;
     }
     .suggestion{
-      background-color: #c0c0c5;
+      background-color: white;
       width: 700px;
       height: auto;
+      overflow: scroll;
     }
     .suggestion-status{
       width: 100px
@@ -80,23 +83,19 @@
     
     .nav-left{
       width: 400px;
-      height: 100px; 
+      height: 400px; 
       margin-left: 0;
       background-color: #b4b7b5;
       position: absolute;
       overflow: scroll;
-      
-      
+
     }
     .nav-right{
       width: 300px;
-      height: 100px; 
+      height: 400px; 
       margin-left: 400px;
       background-color: #ccc2cc;
       position: absolute;
-      overflow: scroll;
-     
-
     }
 
     .suggestion-comment{
@@ -115,21 +114,33 @@
     
    /** bottom  end **/
 
+   .footer{
+      height: 20px;
+      width: 800px;
+      margin-top: 10px;
+      background-color: #e4e3e3;
+      border:solid 1px;
+      text-align: center;
+    }
+    a{
+      text-decoration: none;
+    }
+
 </style>
 
 <div class="box">
-<p> Hi {{ session['username'] }} Your can post a suggestion below </p>
+<p> Hi {{ session['username'] }} , welcome back, we missed you. </p>
 
 <div class="header">
   <ul>
-    <li><a href="">Suggestions</a></li>
+    <li><a href="/suggest">Post something</a></li>
+     <li><a href="/home">Back</a></li>
     <li><a href="/">Logout</a></li>
   </ul>
 </div>
 
 {% from "form_headers.html" import render_field %}
 
-      <p>Post a suggestion <a href="/suggest">here</a> </p>	
 
       {% for suggest in suggestions %}
       <div class="sugestion-box">
@@ -137,7 +148,19 @@
         <div class="nav-top">
             <div class="suggestion-title"> <p style="color:blue; font-size: 20px;"> {{ suggest.user.username }} </p> Topic:  {{ suggest.title }} </div>
             <div class="suggestion"> {{ suggest.suggestion }} </div>
-            <div class="suggestion-status"> <p> Status: {{ suggest.status }} </div>
+            <div class="suggestion-status">
+
+                                {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                
+                                  {% for message in messages %}
+                                    <p align="center" style="color:magenta;">{{ message }}</p>
+                                  {% endfor %}
+                                 
+                                  {% endif %}
+                                {% endwith %}
+
+             <p> Status: {{ suggest.status }} </div>
         </div>
 
         <div class="nav-bootom">
@@ -145,7 +168,7 @@
               
             <div class="nav-left">
                         {% for comment in suggest.comments %}
-                        <p>
+                        <p style="background-color: white; overflow: scroll;">
                           {{ comment.user.username}} :: {{ comment.comment }}
                         </p>
 
@@ -157,13 +180,20 @@
                         <p align="center"><input type=submit value=Comment>
                         </form> 
                 </div>
-                
+
             </div>
 
             <div class="nav-right"> 
                  <div class="suggestion-vote">
-                     <a href="">Vote</a> <br>
-                     <a href="">Flag</a> 
+                        <form method=post action="/vote">
+                          <dl> <input type="hidden" name="suggestionid" value="{{ suggest.uuid }}"> </dl>
+                        <p align="center"><input type=submit value=Vote>
+                        </form> 
+
+                        <form method=post action="/flag">
+                          <dl> <input type="hidden" name="suggestionid" value="{{ suggest.uuid }}"> </dl>
+                        <p align="center"><input type=submit value=Flag>
+                        </form> 
                  </div>
                 
             </div>
@@ -174,7 +204,9 @@
       {% endfor %}
 
 
-
+     <div class="footer">
+         &copy;  Peter and son Software Dev, 2016 
+      </div>
 
 </div>
 

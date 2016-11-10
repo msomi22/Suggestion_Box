@@ -6,28 +6,37 @@
 
 	.box{
          width: 500px;
-         height: 600px;
+         height: auto;
          margin: 10px auto;
          background-color: #8dc3ba;
          align: center;
+         text-align: center; 
+         border:solid 1px; 
+
 	}
 
 </style>
 
 <div class="box">
 
+<p align="center">
+      <a href="/">Back</a> 
+</p>
+<p>
+  {{ message }}
+</p>
+
 {% from "form_headers.html" import render_field %}
 
 <form method=post action="/signup">
   <dl>
-    {{ render_field(form.firstname) }}
-    {{ render_field(form.lastname) }}
-    {{ render_field(form.email) }}
-    {{ render_field(form.username) }}
-    {{ render_field(form.password) }}
+    {{ render_field(form.firstname,size=30) }}
+    {{ render_field(form.lastname,size=30) }}
+    {{ render_field(form.email,size=30) }}
+    {{ render_field(form.username,size=30) }}
+    {{ render_field(form.password,size=30) }}
   </dl>
   <p align="center"><input type=submit value=Signup>
 </form>
 
-<a href="/">Back</a> 
 </div>
