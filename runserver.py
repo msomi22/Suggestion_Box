@@ -14,6 +14,8 @@ app.secret_key = 'peter_mwenda_njeru_1234567890'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db' 
 
+models.db.init_app(app) 
+app.app_context().push()
 
 bootstrap = Bootstrap(app)
 lm = LoginManager(app)
