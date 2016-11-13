@@ -1,8 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date, Text , DateTime , SmallInteger
+from sqlalchemy import Column, Integer, String, ForeignKey, Date, Text , DateTime , SmallInteger, update
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
 
 db = SQLAlchemy()  
 

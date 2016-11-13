@@ -1,164 +1,146 @@
-
-<style type="text/css">
-  body{
-    background-color: #e1e1e2;
-  }
-
-  .box{
-         width: 800px;
-         height: auto;
-         margin: 10px auto;
-         background-color: #8dc3ba;
-         align: center;
-         border:solid 1px; 
-         text-align: center;
-      
-  }
-
-  .header{  
-    height: 20px;
-    background-color: #cacbcc;
-  }
-  .header li{
-    list-style: none;
-    display: inline;
-    }
-   .header ul li{
-    padding-right: 10px;
-    text-transform: capitalize;
-
-    }
-   .header a{
-    text-decoration: none;
-    }
-
-    .header a:hover{
-     background-color: #efe8e8;
-     font-size: 20px;
-     
-    }
+{% extends "bootstrap/base.html" %}
+{% block title %} My First Bootstrap Application {% endblock %}
+{% block navbar %}
 
 
-    .sugestion-box{
-      background-color: #cacacc;
-      width: 800px;
-      height: auto;
-      text-align: left;
-      align:center;
-     
-    }
+{% block head %}
+{{ super() }}
+  <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon">
+  <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon">  
+{% endblock %}
 
-    .nav-top{
-      width: 700px;
-      height: auto;
-    }
 
-    .nav-bootom{
-      width: 700px;
-      height: 400px;
-    }
+<div class="navbar navbar-inverse" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle"
+        data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      <a class="navbar-brand" href="/home">Home</a>
+    </div>
 
-   /** top   **/
-    .suggestion-title{
-      width: 700px;
-      height: auto;
-    }
-    .suggestion{
-      background-color: white;
-      width: 700px;
-      height: auto;
-      overflow: scroll;
-    }
-    .suggestion-status{
-      width: 100px
-      height: 20px;
-      align:center;
-      text-align: center;
-    }
-    
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle"
+        data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      <a class="navbar-brand" href="/users">Users</a> 
+    </div>
 
-    /** top  end  **/
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="/">Logout({{ session['username'] }}) </a></li>
+      </ul>
+    </div>
 
-     /** bottom   **/
-    
-    .nav-left{
-      width: 400px;
-      height: 400px; 
-      margin-left: 0;
-      background-color: #b4b7b5;
-      position: absolute;
-      overflow: scroll;
-
-    }
-    .nav-right{
-      width: 300px;
-      height: 400px; 
-      margin-left: 400px;
-      background-color: #ccc2cc;
-      position: absolute;
-    }
-
-    .suggestion-comment{
-      width: 300px
-      height: auto;
-      align:center;
-      text-align: center;
-    }
-
-    .suggestion-vote{
-      width: 40px
-      height: 20px;
-      align:center;
-      text-align: center;
-    }
-    
-   /** bottom  end **/
-
-   .footer{
-      height: 20px;
-      width: 800px;
-      margin-top: 10px;
-      background-color: #e4e3e3;
-      border:solid 1px;
-      text-align: center;
-    }
-    a{
-      text-decoration: none;
-    }
-
-</style>
-
-<div class="box">
-<p> Hi {{ session['username'] }} , welcome back, we missed you. </p>
-
-<div class="header">
-  <ul>
-    <li><a href="/suggest">Post something</a></li>
-     <li><a href="/home">Back</a></li>
-    <li><a href="/">Logout</a></li>
-  </ul>
+  </div>
 </div>
 
-{% from "form_headers.html" import render_field %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row-fluid sortable">  
+<div class="box span12"> 
+
+<div class="container"> 
+
+         <div>
+            <ul class="breadcrumb">
+              <li> <a href="/suggest">Post</a> </li> 
+              <li>
+              <a href="/home">Back</a> <span class="divider">/</span> </li>
+            </ul>
+            
+        </div>
 
 
-      {% for suggest in suggestions %}
-      <div class="sugestion-box">
 
-        <div class="nav-top">
-            <div class="suggestion-title"> <p style="color:blue; font-size: 20px;"> {{ suggest.user.username }} </p> 
-            <a href="{{ url_for('getonesuggestion', suggestid=suggest.uuid) }}"> Topic:  {{ suggest.title }} ... </a></div>
-            
-            
-        </div> 
-            
+      <div class="row intro-tables">
+
+        <div class="col-md-8">
+          <div class="intro-table intro-table-first">
+            <h5 class="white heading">  <p style="color:blue; font-size: 20px;"> {{ suggestion.user.username }} </p>  </h5>
+            <div class="owl-carousel owl-schedule bottom">
+
+            <p style="color:black;">Topic:  {{ suggestion.title}} </p> <br/>
+
+             Suggestion:: <p style="background-color: #c7c7c4;"> {{ suggestion.suggestion }} </p>
+
+                  {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                
+                                  {% for message in messages %}
+                                    <p align="center" style="color:magenta;">{{ message }}</p>
+                                  {% endfor %}
+                                 
+                                  {% endif %}
+                                {% endwith %}
+
+             <p style="color:magenta;"> Status: {{ suggestion.status }} </p>
+
+
+              {% for comment in suggestion.comments %}
+                        <p style="background-color: #b2c1bf;">
+                         <h4 style="color: blue;"> {{ comment.user.username}}:: </h4>  {{ comment.comment }}
+                        </p>
+
+                        {% endfor %}
+
+
+                 <div class="suggestion-comment">
+                        <form method=post action="/comment">
+                          <dl> <textarea rows="6" cols="30" name="comment"> </textarea> </dl>
+                          <dl> <input type="hidden" name="suggestionid" value="{{ suggestion.uuid }}"> </dl>
+                        <p align="center"><input type=submit value=Comment>
+                        </form> 
+                </div>
+
+
+                <div class="nav-right"> 
+                 <div class="suggestion-vote">
+                        <form method=post action="/vote">
+                          <dl> <input type="hidden" name="suggestionid" value="{{ suggestion.uuid }}"> </dl>
+                          <dl> <input type="hidden" name="votestatus" {% if vote.status=='Upvote' %} value="Downvote" {% else %} value="Upvote" {% endif %}> </dl>
+                           <input type=submit {% if vote.status=='Upvote' %} value="Downvote" {% else %} value="Upvote" {% endif %} > 
+                        </form> 
+
+                        <form method=post action="/flag">
+                          <dl> <input type="hidden" name="suggestionid" value="{{ suggestion.uuid }}"> </dl>
+                            <input type=submit value=Flag> ({{ flag }})
+                        </form> 
+                 </div>
+                
+            </div>
+
+
+            </div>
+          </div>
+        </div>
+
+       
       </div>
-      {% endfor %}
+              
 
-
-     <div class="footer">
-         &copy;  Peter and son Software Dev, 2016 
-      </div>
-
+     
+   </div>
+   </div>
 </div>
 
+
+
+
+
+
+<footer>
+    <p class="pull-right">&copy; Peter and son.  Contact: +254718953974 </p>
+</footer>
+
+{% endblock %}
