@@ -27,7 +27,9 @@ def index():
 
 @app.route('/home') 
 def homepage(): 
-    return render_template('home.html', suggestions = models.Suggestion.query.all() )
+	suggestions = models.Suggestion.query.all() 
+	suggestions.reverse() 
+	return render_template('home.html', suggestions=suggestions ) 
 
 
 @app.route('/users') 
