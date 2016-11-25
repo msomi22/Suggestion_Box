@@ -1,146 +1,266 @@
-{% extends "bootstrap/base.html" %}
-{% block title %} My First Bootstrap Application {% endblock %}
-{% block navbar %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../static/img/favicon.ico">
+
+    <title>Suggestion Box</title>
+ 
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap/bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap/bootstrap-theme.min.css">
+       
+    <style type="text/css">
+    body {
+      padding-top: 70px;
+    }
+
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: auto}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;}
+    }
+
+    .comnt{
+      color: #05ef1b;
+    }
+
+    .unlike{
+      height: 100px;
+      width: 98px;
+      background-image: url('../static/img/unlike.png');
+      background-repeat: no-repeat;
+    }
+
+    .like{
+    	height: 100px;
+    	width: 90px;
+    	background-image: url('../static/img/like.png');
+    	background-repeat: no-repeat;
+    }
+
+  </style>
 
 
-{% block head %}
-{{ super() }}
-  <link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon">
-  <link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}" type="image/x-icon">  
-{% endblock %}
+  </head>
 
-
-<div class="navbar navbar-inverse" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle"
-        data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-      <a class="navbar-brand" href="/home">Home</a>
-    </div>
-
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle"
-        data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-      <a class="navbar-brand" href="/users">Users</a> 
-    </div>
-
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li><a href="/">Logout({{ session['username'] }}) </a></li>
-      </ul>
-    </div>
-
-  </div>
-</div>
-
-{% endblock %}
-
-{% block content %}
-
-<div class="row-fluid sortable">  
-<div class="box span12"> 
-
-<div class="container"> 
-
-         <div>
-            <ul class="breadcrumb">
-              <li> <a href="/suggest">Post</a> </li> 
-              <li>
-              <a href="/home">Back</a> <span class="divider">/</span> </li>
-            </ul>
-            
+  
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">Suggestion Box</a>
         </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li ><a href="/users">Users</a></li>
+
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+               <li class="dropdown">
+                <a href="" class="dropdown-toggle" data-toggle="dropdown">
+                  <button type="button" class="btn btn-default btn-xs">
+                 <span class="glyphicon glyphicon-user"></span> {{ session['username'] }}
+                </button>
+                <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="divider"></li>
+                    <li class="disabled"><a href="">Profile</a></li> <br>
+                    <li><a href="/">Logout</a></li>
+                </ul>
+               </li>
+          </ul>
+        </div>
+      </div>
+    </nav> 
+
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+      <h4>Quick Links</h4>
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="/home">Home</a></li>
+        <li class="disabled"><a href="">Upcoming</a></li>
+        
+      </ul><br>
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search Anything...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </div>
+       <hr>
+      <div id="myCarousel" class="carousel slide">
+          <!-- Carousel indicators -->
+            <ol class="carousel-indicators">
+              <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                  <li data-target="#myCarousel" data-slide-to="2"></li>
+                  </ol>
+                  <!-- Carousel items -->
+                  <div class="carousel-inner">
+                  <div class="item active">
+                  <img src="../static/img/slide/slide1.jpg" alt="First slide">
+                  <div class="carousel-caption">This Caption 1</div>
+                  </div>
+                  <div class="item">
+                  <img src="../static/img/slide/slide2.jpg" alt="Second slide">
+                  <div class="carousel-caption">This Caption 2</div>
+                  </div>
+                  <div class="item">
+                  <img src="../static/img/slide/slide3.jpg" alt="Third slide">
+                  <div class="carousel-caption">This Caption 3</div>
+                  </div>
+                  </div>
+                  <!-- Carousel nav -->
+              <a class="carousel-control left" href="#myCarousel"
+                  data-slide="prev">&lsaquo;</a>
+              <a class="carousel-control right" href="#myCarousel"
+                  data-slide="next">&rsaquo;</a>
+          </div>
+          <hr>
+    </div>
 
 
 
-      <div class="row intro-tables">
+     
+         <div class="col-sm-9">
+         <!-- panel start -->
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title"> 
+                {{ suggestion.user.username }} 
+              </h3>
+            </div>
+            <div class="panel-body">
+             <h3 style="background-color: #e0eafd;">Topic:  {{ suggestion.title}}  ... 
+             </h3> <p style="background-color: #c3d2e4;;"> {{ suggestion.suggestion }} </p>
 
-        <div class="col-md-8">
-          <div class="intro-table intro-table-first">
-            <h5 class="white heading">  <p style="color:blue; font-size: 20px;"> {{ suggestion.user.username }} </p>  </h5>
-            <div class="owl-carousel owl-schedule bottom">
-
-            <p style="color:black;">Topic:  {{ suggestion.title}} </p> <br/>
-
-             Suggestion:: <p style="background-color: #c7c7c4;"> {{ suggestion.suggestion }} </p>
-
-                  {% with messages = get_flashed_messages() %}
+                               {% with messages = get_flashed_messages() %}
                                 {% if messages %}
                 
                                   {% for message in messages %}
-                                    <p align="center" style="color:magenta;">{{ message }}</p>
+                                      <div class="alert alert-success">
+                                           <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                            {{ message }}
+                                       </div> 
                                   {% endfor %}
                                  
                                   {% endif %}
                                 {% endwith %}
 
-             <p style="color:magenta;"> Status: {{ suggestion.status }} </p>
-
-
-              {% for comment in suggestion.comments %}
+                         {% for comment in suggestion.comments %}
                         <p style="background-color: #b2c1bf;">
-                         <h4 style="color: blue;"> {{ comment.user.username}}:: </h4>  {{ comment.comment }}
+                         <h4 style="color: blue;"> {{ comment.user.username}} ... </h4>  <p class="comnt">{{ comment.comment }} </p>
                         </p>
 
                         {% endfor %}
 
 
-                 <div class="suggestion-comment">
-                        <form method=post action="/comment">
-                          <dl> <textarea rows="6" cols="30" name="comment"> </textarea> </dl>
-                          <dl> <input type="hidden" name="suggestionid" value="{{ suggestion.uuid }}"> </dl>
-                        <p align="center"><input type=submit value=Comment>
-                        </form> 
-                </div>
+                     <form class="form-horizontal"  role="form" method=post action="/comment">
+	                     <textarea rows="6" cols="30" name="comment"> </textarea> 
+	                    
 
+	                    <div class="form-group">
+	                       <div class="col-sm-9 col-sm-offset-3">
+	                          <input type="hidden" name="suggestionid" value="{{ suggestion.uuid }}"> 
+	                          <button type="submit" class="btn btn-primary ">Comment</button>  
+	                       </div>
+	                     </div>
+	                   
+                    </form> 
+                   
+                  <button type="button" class="btn btn-primary">
+                  	  <form method=post action="/vote">
+                     <input type="hidden" name="suggestionid" value="{{ suggestion.uuid }}"> 
+                     <input type="hidden" name="votestatus" {% if vote.status=='Upvote' %} value="Downvote" {% else %} value="Upvote" {% endif %}> 
+                     <input type=submit {% if vote.status=='Upvote' %} value="" class="like" {% else %} value="" class="unlike" {% endif %} > 
+                  </form> 
+                  </button>
 
-                <div class="nav-right"> 
-                 <div class="suggestion-vote">
-                        <form method=post action="/vote">
-                          <dl> <input type="hidden" name="suggestionid" value="{{ suggestion.uuid }}"> </dl>
-                          <dl> <input type="hidden" name="votestatus" {% if vote.status=='Upvote' %} value="Downvote" {% else %} value="Upvote" {% endif %}> </dl>
-                           <input type=submit {% if vote.status=='Upvote' %} value="Downvote" {% else %} value="Upvote" {% endif %} > 
-                        </form> 
+                  <button type="button" class="btn btn-default">
+                  	<form method=post action="/flag">
+                    <input type="hidden" name="suggestionid" value="{{ suggestion.uuid }}"> 
+                    <input type=submit value=Flag> ({{ flag }}) 
+                  </form> 
+                  </button>
+                  <p>Upvotes: {{ uvote }}</p>
+                  <p>Downvotes: {{ dvote }}</p>
 
-                        <form method=post action="/flag">
-                          <dl> <input type="hidden" name="suggestionid" value="{{ suggestion.uuid }}"> </dl>
-                            <input type=submit value=Flag> ({{ flag }})
-                        </form> 
-                 </div>
                 
-            </div>
+             
 
-
-            </div>
-          </div>
+    </div>   <!-- end panel body-->
+        <div class="panel-footer">
+          <div class="row">
+          <div class="col col-xs-4"> <small> <i> Suggestion Box Application V2 </i> </small> </div>
         </div>
+        </div>
+    </div>  <!-- end panel -->
 
-       
-      </div>
-              
 
-     
-   </div>
-   </div>
+      <hr>
+    </div>
+  </div>
 </div>
 
-
-
-
-
-
-<footer>
-    <p class="pull-right">&copy; Peter and son.  Contact: +254718953974 </p>
+<footer class="container-fluid">   
+    <p class="text-center"> &copy; All Rights Reserved. </p>
+    <p class="text-center">  <button type="button" class="btn btn-link"> Lisence.</button> </p>
+    <p class="text-center">  <button type="button" class="btn btn-link"> Terms & Conditions.</button> </p>
 </footer>
 
-{% endblock %}
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  
+    <script src="../static/js/bootstrap/jquery-3.1.1.min.js"></script>
+    <script src="../static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="../static/js/bootstrap/bootstrap-dropdown.js"></script>
+    <script src="../static/js/bootstrap/bootstrap.js"></script>
+    <script src="../static/js/bootstrap/bootstrap-button.js"></script>
+    <script src="../static/js/bootstrap/bootstrap-tab.js"></script>
+    <script src="../static/js/bootstrap/bootstrap-tooltip.js"></script>
+    <script src="../static/js/bootstrap/bootstrap-modal.js"></script>
+    <script src="../static/js/bootstrap/bootstrap-alert.js"></script>
+    
+    
+  
+  </body>
+</html>
