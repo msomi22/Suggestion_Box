@@ -92,38 +92,43 @@ def getonesuggestion(suggestid):
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    form = SignupForm(request.form)
-    if request.method == 'POST' and form.validate():
-        
-        if not validate_email(form.email.data) and form.validate:
-        	flash('The email provided is not valid')
-        	return redirect(url_for('register'))
-            
-        if existEmail(form.email.data) and form.validate:
-        	flash('The email already exist!')
-        	return redirect(url_for('register'))
-            
-        if existUsername(form.username.data):
-        	flash('The username already exist!')
-        	return redirect(url_for('register'))
-            
-        user = models.User(str(uuid.uuid4()),form.firstname.data, form.lastname.data,
-                    form.email.data, form.username.data, form.password.data,datetime.datetime.now())
-        models.db.session.add(user)
-        models.db.session.commit()
-        #send mail now
-        try:
-        	msg = Message('Thanks for registering with Suggestion-Box App', sender='mwendapeter72@gmail.com', recipients=[form.email.data])
-        	msg.body = 'Hi ' + form.username.data + ', We are pleased to welcome you to try our amazing App, enjoy.'
-        	mail.send(msg)
-        	flash('Registration successful, you can login')
-        	return redirect(url_for('index'))  
-        except Exception as e:
-        	flash('Registration successful, you can login')
-        	return redirect(url_for('index'))  
-        	#return str(e)
-        flash('Registration successful, you can login')
-        return redirect(url_for('index'))  
+	try:
+	    form = SignupForm(request.form)
+	    if request.method == 'POST' and form.validate():
+	        
+	        if not validate_email(form.email.data) and form.validate:
+	        	flash('The email provided is not valid')
+	        	return redirect(url_for('register'))
+	            
+	        if existEmail(form.email.data) and form.validate:
+	        	flash('The email already exist!')
+	        	return redirect(url_for('register'))
+	            
+	        if existUsername(form.username.data):
+	        	flash('The username already exist!')
+	        	return redirect(url_for('register'))
+	            
+	        user = models.User(str(uuid.uuid4()),form.firstname.data, form.lastname.data,
+	                    form.email.data, form.username.data, form.password.data,datetime.datetime.now())
+	        models.db.session.add(user)
+	        models.db.session.commit()
+	        #send mail now
+	        try:
+	        	msg = Message('Thanks for registering with Suggestion-Box App', sender='mwendapeter72@gmail.com', recipients=[form.email.data])
+	        	msg.body = 'Hi ' + form.username.data + ', We are pleased to welcome you to try our amazing App, enjoy.'
+	        	mail.send(msg)
+	        	flash('Registration successful, you can login')
+	        	return redirect(url_for('index'))  
+	        except Exception as e:
+	        	flash('Registration successful, you can login')
+	        	return redirect(url_for('index'))  
+	        	#return str(e)
+	        flash('Registration successful, you can login')
+	        return redirect(url_for('index'))  
+	    return redirect(url_for('logout'))     
+
+	except Exception as e:
+		raise str(e)       
      
 def existUsername(username): 
     if models.User.query.filter_by(username=username).first():
@@ -135,75 +140,95 @@ def existEmail(email):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm(request.form)
-    if request.method == 'POST': 
-        user = models.User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.verify_password(form.password.data):
-        	flash('Incorrect user credentials, try again')
-        	return redirect(url_for('index'))
+	try:
+	    form = LoginForm(request.form)
+	    if request.method == 'POST': 
+	        user = models.User.query.filter_by(username=form.username.data).first()
+	        if user is None or not user.verify_password(form.password.data):
+	        	flash('Incorrect user credentials, try again')
+	        	return redirect(url_for('index'))
 
-        session['username'] = user.username
-        session['uuid'] = user.uuid 
-        return redirect(request.args.get('next') or url_for('homepage'))
+	        session['username'] = user.username
+	        session['uuid'] = user.uuid 
+	        return redirect(request.args.get('next') or url_for('homepage'))
+	    return redirect(url_for('logout'))    
+
+	except Exception as e:
+		raise str(e)      
+
 
 @app.route('/suggest', methods=['GET', 'POST'])
 def suggestion():
-    form = SuggestionForm(request.form) 
-    if request.method == 'POST' and form.validate():
+	try:
+	    form = SuggestionForm(request.form) 
+	    if request.method == 'POST' and form.validate():
 
-        if form.title.data == '':
-            flash('Provide a title')
-            return redirect(url_for('homepage'))
-            
-        if len(form.title.data) < 5:
-            flash('Title too short!')
-            return redirect(url_for('homepage'))
-            
-        if form.suggestion.data == '' or len(form.suggestion.data) < 5: 
-            flash('You must guggest something more that 5 characters long!')
-            return redirect(url_for('homepage'))
+	        if form.title.data == '':
+	            flash('Provide a title')
+	            return redirect(url_for('homepage'))
+	            
+	        if len(form.title.data) < 5:
+	            flash('Title too short!')
+	            return redirect(url_for('homepage'))
+	            
+	        if form.suggestion.data == '' or len(form.suggestion.data) < 5: 
+	            flash('You must guggest something more that 5 characters long!')
+	            return redirect(url_for('homepage'))
 
-        else:
-            suggestion = models.Suggestion(str(uuid.uuid4()),str(session['uuid']),form.title.data, form.suggestion.data,'new','new', datetime.datetime.now())
-            models.db.session.add(suggestion)
-            models.db.session.commit()
-            flash('Suggestion posted successfully')
-            return redirect(url_for('homepage'))
+	        else:
+	            suggestion = models.Suggestion(str(uuid.uuid4()),str(session['uuid']),form.title.data, form.suggestion.data,'new','new', datetime.datetime.now())
+	            models.db.session.add(suggestion)
+	            models.db.session.commit()
+	            flash('Suggestion posted successfully')
+	            return redirect(url_for('homepage'))
+	    return redirect(url_for('logout'))         
+
+	except Exception as e:
+		raise str(e)           
            
 	
 
 @app.route('/comment', methods=['GET', 'POST'])
 def comment():
-    form = CommentForm(request.form) 
-    if request.method == 'POST' and form.validate():
-        if len(str(form.comment.data)) > 2:
-            comment = models.Comment(str(uuid.uuid4()),str(form.suggestionid.data),str(session['uuid']),form.comment.data,datetime.datetime.now())
-            models.db.session.add(comment)
-            models.db.session.commit()
-            flash('Your comment was posted successfully')
-        else:    
-            flash('Write something first')
-            return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))
-    return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data)) 
+	try:
+	    form = CommentForm(request.form) 
+	    if request.method == 'POST' and form.validate():
+	        if len(str(form.comment.data)) > 2:
+	            comment = models.Comment(str(uuid.uuid4()),str(form.suggestionid.data),str(session['uuid']),form.comment.data,datetime.datetime.now())
+	            models.db.session.add(comment)
+	            models.db.session.commit()
+	            flash('Your comment was posted successfully')
+	        else:    
+	            flash('Write something first')
+	            return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))
+	    return redirect(url_for('logout'))        
+
+	except Exception as e:
+		raise str(e)
 	
 
 @app.route('/vote', methods=['GET', 'POST'])
 def vove():
-    form = VoteForm(request.form) 
-    if request.method == 'POST' and form.validate():
-        if voted(form.suggestionid.data,str(session['uuid'])):
-            vote = models.Vote(form.suggestionid.data,str(session['uuid']),form.votestatus.data)
-            vote = models.Vote.query.filter_by(suggestionuuid=form.suggestionid.data).first()
-            vote.status = form.votestatus.data
-            models.db.session.commit()
-            flash('Thanks, suggestion voted')
-            return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))   
-        vote = models.Vote(form.suggestionid.data,str(session['uuid']),form.votestatus.data)
-        models.db.session.add(vote)
-        models.db.session.commit()
-        flash('Thanks, suggestion voted')
-        return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))   
-	return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data)) 
+	try:
+		form = VoteForm(request.form)
+		if request.method == 'POST' and form.validate():
+			if voted(form.suggestionid.data,str(session['uuid'])):
+				vote = models.Vote(form.suggestionid.data,str(session['uuid']),form.votestatus.data)
+				vote = models.Vote.query.filter_by(suggestionuuid=form.suggestionid.data).first()
+				vote.status = form.votestatus.data
+				models.db.session.commit()
+				flash('Thanks, suggestion voted')
+				return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))
+			vote = models.Vote(form.suggestionid.data,str(session['uuid']),form.votestatus.data)
+			models.db.session.add(vote)
+			models.db.session.commit()
+			flash('Thanks, suggestion voted')
+			return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))
+		return redirect(url_for('logout'))
+		
+	except Exception as e:
+		return str(e)
+    
 
 def voted(suggestionuuid,votinguseruuid):
     if models.Vote.query.filter_by(suggestionuuid=suggestionuuid,votinguseruuid=votinguseruuid).first():
@@ -213,17 +238,22 @@ def voted(suggestionuuid,votinguseruuid):
 
 @app.route('/flag', methods=['GET', 'POST'])
 def flag():
-    form = FlagForm(request.form)
-    if request.method == 'POST' and form.validate(): 
-        if flagged(form.suggestionid.data,str(session['uuid'])):
-            flash('You cant flag twice')
-            return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))   
-        flag = models.FlagCount(form.suggestionid.data,str(session['uuid'])) 
-        models.db.session.add(flag)
-        models.db.session.commit()
-        flash('Thanks for your concerns regarding this suggestion, we will act accordingly')
-        return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))
-	return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data)) 
+	try:
+	    form = FlagForm(request.form)
+	    if request.method == 'POST' and form.validate(): 
+	        if flagged(form.suggestionid.data,str(session['uuid'])):
+	            flash('You cant flag twice')
+	            return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))   
+	        flag = models.FlagCount(form.suggestionid.data,str(session['uuid'])) 
+	        models.db.session.add(flag)
+	        models.db.session.commit()
+	        flash('Thanks for your concerns regarding this suggestion, we will act accordingly')
+	        return redirect(url_for('getonesuggestion',suggestid=form.suggestionid.data))
+	    return redirect(url_for('logout'))    
+	    
+	except Exception as e:
+		return str(e)
+
 
 def flagged(suggestionuuid,flaginguseruuid):
     if models.FlagCount.query.filter_by(suggestionuuid=suggestionuuid,flaginguseruuid=flaginguseruuid).first():
