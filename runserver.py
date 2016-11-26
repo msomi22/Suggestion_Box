@@ -38,29 +38,50 @@ lm.login_view = 'login'
 def index():
     return render_template('index.html') 
 
+@app.route('/logout')  
+def logout():
+    session.clear() 
+    return render_template('index.html')     
+
 @app.route('/register')
 def register():
     return render_template('signup.html')      
 
 @app.route('/home') 
 def homepage(): 
-	suggestions = models.Suggestion.query.all() 
-	suggestions.reverse() 
+    if True:
+        if session.get('username') == None:
+            return redirect(url_for('logout'))
+
+	suggestions = models.Suggestion.query.all()
+	suggestions.reverse()
 	return render_template('home.html', suggestions=suggestions ) 
 
 
 @app.route('/users') 
 def usres(): 
+    if True:
+        if session.get('username') == None:
+            return redirect(url_for('logout'))
+
     return render_template('users.html', users = models.User.query.all() )
 
 
 @app.route('/suggestion') 
 def getsuggestion(): 
+    if True:
+        if session.get('username') == None:
+            return redirect(url_for('logout'))
+
     return render_template('suggestion.html', suggestions = models.Suggestion.query.all() ) 
 
 
 @app.route('/suggestion/<suggestid>') 
 def getonesuggestion(suggestid):
+    if True:
+        if session.get('username') == None:
+            return redirect(url_for('logout'))
+            
     suggestion = models.Suggestion.query.filter_by(uuid=suggestid).first()
     vote = models.Vote.query.filter_by(suggestionuuid=suggestion.uuid).first()
     flag = models.FlagCount.query.filter_by(suggestionuuid=suggestion.uuid).count()
