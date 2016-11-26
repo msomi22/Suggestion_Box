@@ -237,7 +237,11 @@ def page_not_found(e):
 
 @app.errorhandler(405)
 def method_not_found(e):
-    return render_template('405.html')    
+    return render_template('405.html')
+
+@app.errorhandler(500)
+def internal_error(e):
+    return render_template('500.html')        
 
 
 
